@@ -1,0 +1,27 @@
+#!/bin/bash -eu
+
+if [ $# -ne 1 ]; then
+  echo "Usage: $0 <url>"
+  exit 1
+fi
+
+if [ -z "$1" ]; then
+  echo "URL is empty"
+  exit 1
+fi
+
+if [[ ! "$1" =~ ^http ]]; then
+  echo "URL should start with http or https"
+  exit 1
+fi
+
+url="$1"
+
+title=$(curl -s "$url" | grep -oP '<title>\K[^<]+' | head -1)
+
+if [ -z "$title" ]; then
+  echo "Failed to get title"
+  exit 1
+fi
+
+echo "[$title]($url)"
